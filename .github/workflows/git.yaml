@@ -1,0 +1,17 @@
+name : Simple Go Build
+
+on:
+     push:
+        branches :
+            - main
+
+jobs:
+    build :
+        runs-on : ubuntu-latest
+        steps:
+            - uses : actions/checkout@v3
+            - name: Setting Go Version
+              uses: actions/setup-go@v4
+              with: 
+                 go-version:  '1.51.1'
+            - run : go run hello-world.go 
