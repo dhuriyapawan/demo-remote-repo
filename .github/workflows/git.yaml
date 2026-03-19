@@ -1,17 +1,35 @@
-name : Simple Go Build
+name: Java Gradle Build
 
 on:
-     push:
-        branches :
-            - main
+  push:
+    branches: [ "main", "dev" ]
 
 jobs:
-    build :
-        runs-on : ubuntu-latest
-        steps:
-            - uses : actions/checkout@v3
-            - name: Setting Go Version
-              uses: actions/setup-go@v4
-              with: 
-                 go-version:  '1.26'
-            - run : go run hello-world.go 
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: "11"
+          distribution: "temurin"
+
+      - name: Build
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: build
+
+      - name: Test
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: test
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: build/libs
